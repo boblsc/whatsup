@@ -4,6 +4,7 @@ LLM-based paper relevance evaluator using OpenAI API
 
 from openai import OpenAI
 from typing import Dict, Any, List
+from tqdm import tqdm
 
 
 class LLMEvaluator:
@@ -46,7 +47,12 @@ class LLMEvaluator:
         """
         relevant_papers = []
         
-        for paper in papers:
+        # Use tqdm for progress bar
+        for paper in tqdm(
+            papers, 
+            desc="Evaluating papers", 
+            unit="paper"
+        ):
             result = self._evaluate_single_paper(
                 paper, research_context, user_interests
             )
@@ -103,7 +109,6 @@ class LLMEvaluator:
                         "content": prompt
                     }
                 ],
-                temperature=0.3,
                 max_completion_tokens=200
             )
             

@@ -4,6 +4,7 @@ openai>=1.30.0,<2.0.0
 httpx>=0.24.0,<0.28.0
 PyYAML==6.0.1
 bibtexparser==1.4.1
+tqdm==4.66.1
 
 # Optional but recommended
 python-dotenv==1.0.0
