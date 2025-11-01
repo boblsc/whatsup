@@ -1,0 +1,77 @@
+# ArXiv Daily Digest Configuration File
+# Copy this file to config.yaml and fill in your details
+
+# Email Configuration (for sending digest)
+email:
+  # SMTP server (Gmail: smtp.gmail.com)
+  smtp_server: smtp.gmail.com
+  
+  # SMTP port (Gmail: 587 for TLS)
+  smtp_port: 587
+  
+  # Your email address (sender)
+  from_email: your.email@gmail.com
+  
+  # Your email password or app password
+  # For Gmail, use an app password (see docs/GMAIL_SETUP.md)
+  password: your-app-password-here
+  
+  # Recipient email address (can be same as from_email)
+  to_email: your.email@gmail.com
+
+# ArXiv Configuration
+arxiv:
+  # List of arXiv categories to monitor
+  # Examples: cond-mat.supr-con, physics.ins-det, astro-ph.IM
+  # Find categories at: https://arxiv.org/category_taxonomy
+  categories:
+    - cond-mat.supr-con
+    - physics.ins-det
+    - astro-ph.IM
+  
+  # Keywords for pre-filtering (optional, improves speed)
+  # Papers matching ANY keyword will be evaluated by LLM
+  keywords:
+    - superconductor
+    - quasiparticle
+    - THz
+    - detector
+    - photon
+  
+  # How many days back to search for papers
+  max_days_back: 1
+
+# OpenAI API Configuration
+openai:
+  # Your OpenAI API key
+  # Get one at: https://platform.openai.com/api-keys
+  api_key: your-openai-api-key-here
+  
+  # Model to use for evaluation
+  # Recommended: gpt-4o-mini (fast and cost-effective)
+  # Alternative: gpt-4o (more capable but expensive)
+  model: gpt-4o-mini
+  
+  # Relevance threshold (0-10)
+  # Papers scoring >= this value will be included
+  threshold: 7.0
+
+# Zotero Library Configuration
+zotero:
+  # Path to your exported Zotero library
+  # Supported formats: .bib (BibTeX) or .json
+  # See docs/ZOTERO_EXPORT.md for export instructions
+  library_file: path/to/your/zotero_export.bib
+
+# Your Research Interests
+interests:
+  # Describe your current specific research interests
+  # This helps the LLM understand what papers are relevant
+  description: |
+    Recent specific interests:
+    1. Athermal quasiparticle dynamics in disordered
+       superconductors
+    2. Application of THz single photon detectors in
+       particle physics and cosmology
+    3. [Add more interests as needed]
+

@@ -205,3 +205,10 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# ArXiv Daily Digest - Project specific
+config.yaml
+digest.log
+*.log
+*.bib
+*.json

@@ -1,0 +1,9 @@
+# Core dependencies
+arxiv==2.1.0
+openai==1.54.0
+PyYAML==6.0.1
+bibtexparser==1.4.1
+
+# Optional but recommended
+python-dotenv==1.0.0
+
