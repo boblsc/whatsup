@@ -99,8 +99,21 @@ class EmailSender:
                 "Powered by ArXiv Daily Digest"
             ])
         
+        # Calculate stats
+        avg_score = sum(
+            p.get('relevance_score', 0) for p in papers
+        ) / len(papers)
+        high_relevance = sum(
+            1 for p in papers if p.get('relevance_score', 0) >= 8
+        )
+        
         lines = [
-            "Here are today's relevant papers from arXiv:",
+            "ARXIV DAILY DIGEST",
+            "=" * 70,
+            "",
+            f"📊 Summary: {len(papers)} relevant paper(s) found",
+            f"   Average relevance: {avg_score:.1f}/10",
+            f"   High relevance (≥8): {high_relevance} paper(s)",
             "",
             "=" * 70,
             ""
@@ -113,32 +126,55 @@ class EmailSender:
                 'No reason provided'
             )
             
+            # Truncate long author lists
+            authors = paper['authors']
+            if len(authors) > 100:
+                authors = authors[:100] + "..."
+            
             lines.extend([
-                f"{i}. {paper['title']}",
-                f"   Authors: {paper['authors']}",
-                f"   Published: {paper['published']}",
-                f"   Relevance: {score}/10 - {reason}",
-                f"   URL: {paper['url']}",
-                f"   PDF: {paper['pdf_url']}",
                 "",
-                "   Abstract:",
-                f"   {self._wrap_text(paper['abstract'], 67)}",
+                f"PAPER #{i}",
+                "─" * 70,
                 "",
-                "-" * 70,
+                f"📄 {paper['title']}",
+                "",
+                f"✍️  Authors: {authors}",
+                f"📅 Published: {paper['published']}",
+                "",
+                f"⭐ RELEVANCE SCORE: {score}/10",
+                f"💡 {reason}",
+                "",
+                f"📥 PDF: {paper['pdf_url']}",
+                "",
+                "📝 ABSTRACT:",
+            ])
+            
+            # Add wrapped abstract with proper indentation
+            abstract_lines = self._wrap_text(
+                paper['abstract'], 
+                67
+            ).split('\n')
+            for line in abstract_lines:
+                lines.append(f"   {line.strip()}")
+            
+            lines.extend([
+                "",
+                "─" * 70,
                 ""
             ])
         
         lines.extend([
             "",
-            "---",
-            "This digest was generated automatically.",
-            "Powered by ArXiv Daily Digest"
+            "=" * 70,
+            "📬 This digest was generated automatically",
+            "🤖 Powered by ArXiv Daily Digest with AI evaluation",
+            "=" * 70
         ])
         
         return "\n".join(lines)
     
     def _wrap_text(self, text: str, width: int) -> str:
-        """Wrap text to specified width with indent."""
+        """Wrap text to specified width."""
         words = text.split()
         lines = []
         current_line = []
@@ -150,12 +186,12 @@ class EmailSender:
                 current_length += len(word) + 1
             else:
                 if current_line:
-                    lines.append('   ' + ' '.join(current_line))
+                    lines.append(' '.join(current_line))
                 current_line = [word]
                 current_length = len(word)
         
         if current_line:
-            lines.append('   ' + ' '.join(current_line))
+            lines.append(' '.join(current_line))
         
         return '\n'.join(lines)
     
