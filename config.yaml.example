@@ -48,9 +48,7 @@ openai:
   api_key: your-openai-api-key-here
   
   # Model to use for evaluation
-  # Recommended: gpt-4o-mini (fast and cost-effective)
-  # Alternative: gpt-4o (more capable but expensive)
-  model: gpt-4o-mini
+  model: gpt-5
   
   # Relevance threshold (0-10)
   # Papers scoring >= this value will be included
