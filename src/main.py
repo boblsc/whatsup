@@ -10,6 +10,7 @@ from zotero_parser import ZoteroParser
 from arxiv_client import ArxivClient
 from llm_evaluator import LLMEvaluator
 from email_sender import EmailSender
+from feishu_sender import FeishuSender
 
 
 def main(config_path: str = "config.yaml"):
@@ -112,21 +113,35 @@ def main(config_path: str = "config.yaml"):
         f"(score >= {evaluator.threshold})"
     )
     
-    # Step 5: Send email digest (even if no papers found)
-    print("\nSending email digest...")
+    # Step 5: Send email digest when enabled
     email_config = config.get_email_config()
-    
-    sender = EmailSender(
-        smtp_server=email_config['smtp_server'],
-        smtp_port=email_config['smtp_port'],
-        from_email=email_config['from_email'],
-        password=email_config['password'],
-        to_email=email_config['to_email']
-    )
-    
-    success = sender.send_digest(relevant_papers)
-    
-    if success:
+    if email_config.get('enabled', False):
+        print("\nSending email digest...")
+        sender = EmailSender(
+            smtp_server=email_config['smtp_server'],
+            smtp_port=email_config['smtp_port'],
+            from_email=email_config['from_email'],
+            password=email_config['password'],
+            to_email=email_config['to_email']
+        )
+        success = sender.send_digest(relevant_papers)
+    else:
+        print("\nEmail delivery disabled; skipping email digest.")
+        success = True
+
+    # Step 6: Send Feishu notification if configured
+    feishu_config = config.get_feishu_config()
+    feishu_success = True
+    if feishu_config.get('enabled'):
+        print("Sending Feishu notification...")
+        feishu_sender = FeishuSender(
+            webhook_url=feishu_config['webhook_url'],
+            secret=feishu_config.get('secret'),
+            max_papers=feishu_config.get('max_papers', 5)
+        )
+        feishu_success = feishu_sender.send_digest(relevant_papers)
+
+    if success and feishu_success:
         print("\n" + "=" * 70)
         print("Digest completed successfully!")
         print("=" * 70)

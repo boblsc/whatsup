@@ -1,0 +1,37 @@
+name: Daily ArXiv Digest
+
+on:
+  schedule:
+    - cron: '0 1 * * *'
+  workflow_dispatch:
+
+jobs:
+  run-digest:
+    name: Generate digest
+    runs-on: ubuntu-latest
+    env:
+      FEISHU_WEBHOOK_URL: ${{ secrets.FEISHU_WEBHOOK_URL }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Restore config
+        run: |
+          if [ -z "${DIGEST_CONFIG}" ]; then
+            echo "DIGEST_CONFIG secret is empty" >&2
+            exit 1
+          fi
+          printf '%s' "${DIGEST_CONFIG}" > config.yaml
+        env:
+          DIGEST_CONFIG: ${{ secrets.DIGEST_CONFIG }}
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run digest
+        run: python src/main.py
