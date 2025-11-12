@@ -19,6 +19,27 @@ email:
   # Recipient email address (can be same as from_email)
   to_email: your.email@gmail.com
 
+# Feishu (Lark) Notification (optional)
+feishu:
+  # Enable to push digest summaries to a Feishu bot (true/false)
+  enabled: false
+
+  # Incoming webhook URL from Feishu bot settings.
+  # Store it directly here or use webhook_url_secret to read
+  # from an environment variable (recommended).
+  webhook_url: https://open.feishu.cn/open-apis/bot/v2/hook/your-webhook-id
+
+  # Name of environment variable that stores the webhook URL.
+  # If provided, it overrides webhook_url above.
+  webhook_url_secret: FEISHU_WEBHOOK_URL
+
+  # (Optional) Signing secret for enhanced security
+  # Leave blank if your bot webhook does not use a secret
+  secret: ""
+
+  # Maximum number of papers to include in the Feishu message
+  max_papers: 5
+
 # ArXiv Configuration
 arxiv:
   # List of arXiv categories to monitor
