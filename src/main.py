@@ -10,6 +10,7 @@ from zotero_parser import ZoteroParser
 from arxiv_client import ArxivClient
 from llm_evaluator import LLMEvaluator
 from email_sender import EmailSender
+from feishu_sender import FeishuSender
 
 
 def main(config_path: str = "config.yaml"):
@@ -125,8 +126,20 @@ def main(config_path: str = "config.yaml"):
     )
     
     success = sender.send_digest(relevant_papers)
-    
-    if success:
+
+    # Step 6: Send Feishu notification if configured
+    feishu_config = config.get_feishu_config()
+    feishu_success = True
+    if feishu_config.get('enabled'):
+        print("Sending Feishu notification...")
+        feishu_sender = FeishuSender(
+            webhook_url=feishu_config['webhook_url'],
+            secret=feishu_config.get('secret'),
+            max_papers=feishu_config.get('max_papers', 5)
+        )
+        feishu_success = feishu_sender.send_digest(relevant_papers)
+
+    if success and feishu_success:
         print("\n" + "=" * 70)
         print("Digest completed successfully!")
         print("=" * 70)

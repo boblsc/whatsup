@@ -12,8 +12,10 @@ based on your research interests and Zotero library.
   intelligently match papers to your interests
 - 📚 **Zotero Integration**: Learns from your existing 
   research library
-- 📧 **Email Delivery**: Sends daily digest with relevant 
+- 📧 **Email Delivery**: Sends daily digest with relevant
   papers, abstracts, and links
+- 🔔 **Feishu Alerts**: Optional webhook push for quick
+  notifications in Feishu (Lark)
 - ⏰ **Automated**: Set it up once, get digests daily via 
   cron/launchd
 - ⚙️ **Configurable**: Customize categories, keywords, 
@@ -57,6 +59,8 @@ Required configuration:
 - ArXiv categories and keywords
 - Research interests description
 - Zotero library path (see [docs/ZOTERO_EXPORT.md](docs/ZOTERO_EXPORT.md))
+- (Optional) Feishu webhook details for push notifications
+  (store the webhook URL in an environment variable for security)
 
 4. **Run manually (test)**
 
@@ -70,6 +74,14 @@ See [docs/CRON_SETUP.md](docs/CRON_SETUP.md) for
 instructions on scheduling daily runs.
 
 ## Configuration
+
+### Feishu Webhook Secrets
+
+If you enable Feishu alerts, store the webhook URL in an
+environment variable (for example `FEISHU_WEBHOOK_URL`) and set
+`feishu.webhook_url_secret` in `config.yaml`. The application will
+resolve the value at runtime so the raw webhook URL never needs to be
+checked into version control.
 
 ### ArXiv Categories
 
